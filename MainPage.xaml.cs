@@ -22,7 +22,7 @@ namespace BedChangeReminder
         {
             var popup = new BedPopup
             {
-                OnBedSaved = async (name, date, action) =>
+                OnBedSaved = async (name, date, action, frequency) =>
                 {
                     if (!string.IsNullOrWhiteSpace(name))
                     {
@@ -33,7 +33,8 @@ namespace BedChangeReminder
                             {
                                 Name = name,
                                 LastChangeDate = date,
-                                LastActionFlip = action == "Flipped"
+                                LastActionFlip = action == "Flipped",
+                                Frequency = frequency
                             });
                         });
                     }
@@ -56,30 +57,21 @@ namespace BedChangeReminder
         {
             if (sender is Button button && button.BindingContext is Bed selectedBed)
             {
-                var popup = new BedPopup
+                var popup = new BedPopup(selectedBed)
                 {
-                    OnBedSaved = async (name, date, action) =>
+                    OnBedSaved = async (name, date, action, frequncy) =>
                     {
-                        // Use MainThread.BeginInvokeOnMainThread to update UI
-                        MainThread.BeginInvokeOnMainThread(() =>
+                        if (!string.IsNullOrWhiteSpace(name))
                         {
-                            selectedBed.Name = name;
-                            selectedBed.LastChangeDate = date;
-                            selectedBed.LastActionFlip = action == "Flipped";
-
-                            ViewModel.RefreshBeds();
-                        });
-
-                        // Get the main page safely before using it
-                        var mainPage = Application.Current?.Windows.Count > 0 ? Application.Current.Windows[0].Page : null;
-                        if (mainPage != null)
-                        {
-                            await mainPage.DisplayAlert("Success", "Bed details updated successfully.", "OK");
+                            MainThread.BeginInvokeOnMainThread(() =>
+                            {
+                                ViewModel.EditBed(selectedBed, name, date, action, frequncy);
+                            });
                         }
                     }
                 };
 
-                await this.ShowPopupAsync(popup); // ✅ Ensure ShowPopup is awaited
+                await this.ShowPopupAsync(popup);
             }
         }
 

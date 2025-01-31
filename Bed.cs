@@ -8,12 +8,16 @@ namespace BedChangeReminder
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public int Frequency { get; set; } // Days
-        public DateTime LastChangeDate { get; set; }
-        public bool LastActionFlip { get; set; } // True = Flip, False = Rotate
+
+        [ObservableProperty] private string? name;
+        [ObservableProperty] private int frequency; // Days
+        [ObservableProperty] private DateTime lastChangeDate;
+        [ObservableProperty] private bool lastActionFlip; // True = Flip, False = Rotate
 
         public DateTime NextChangeDate => LastChangeDate.AddDays(Frequency);
+
+        public string LastAction => LastActionFlip ? "Flip" : "Rotate";
+
         public string NextAction => LastActionFlip ? "Rotate" : "Flip";
 
 

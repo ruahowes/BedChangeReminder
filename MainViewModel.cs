@@ -38,6 +38,36 @@ namespace BedChangeReminder
             }
         }
 
+        public void AddBed(string name, DateTime lastChangeDate, string action, int frequency)
+        {
+            var newBed = new Bed
+            {
+                Name = name,
+                LastChangeDate = lastChangeDate,
+                LastActionFlip = action == "Flipped",
+                Frequency = frequency
+            };
+
+            Beds.Add(newBed);
+        }
+
+        public void EditBed(Bed bed, string newName, DateTime newDate, string newAction, int frequncy)
+        {
+            bed.Name = newName;
+            bed.LastChangeDate = newDate;
+            bed.LastActionFlip = newAction == "Flipped";
+            bed.Frequency = frequncy;
+
+            OnPropertyChanged(nameof(Beds)); // Notify UI
+
+            var index = Beds.IndexOf(bed);
+            if (index >= 0)
+            {
+                Beds.RemoveAt(index);
+                Beds.Insert(index, bed);
+            }
+        }
+
         // Command for "Log Change" Button
         [RelayCommand]
         public void LogBedChange(Bed bed)
@@ -57,7 +87,7 @@ namespace BedChangeReminder
 
             var popup = new Views.BedPopup
             {
-                OnBedSaved = (name, date, action) =>
+                OnBedSaved = (name, date, action, frequncy) =>
                 {
                     bed.Name = name;
                     bed.LastChangeDate = date;

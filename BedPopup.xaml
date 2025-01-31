@@ -5,15 +5,29 @@
             x:Class="BedChangeReminder.Views.BedPopup">
 
     <VerticalStackLayout Padding="20" BackgroundColor="White" WidthRequest="300">
-        <Label Text="Add or Update Bed" FontSize="20" HorizontalOptions="Center" />
-        <Entry x:Name="BedNameEntry" Placeholder="Enter Bed Name" />
-        <DatePicker x:Name="ChangeDatePicker" Format="dd/MM/yyyy"/>
-        <Picker x:Name="FlipRotatePicker" Title="Select Flipped/Rotated">
+        <Label Text="Add or Update Bed" 
+               FontSize="20" 
+               HorizontalOptions="Center" />
+        
+        <Entry x:Name="BedNameEntry" 
+               Placeholder="Enter Bed Name" />
+        
+        <Entry x:Name="FrequencyEntry" 
+               Placeholder="Enter frequency in days" 
+               Keyboard="Numeric"/>
+        
+        <DatePicker x:Name="ChangeDatePicker" 
+                    Format="dd/MM/yyyy"/>
+       
+        <Picker x:Name="FlipRotatePicker" 
+                Title="Select Flipped/Rotated">
             <Picker.Items>
                 <x:String>Flipped</x:String>
                 <x:String>Rotated</x:String>
             </Picker.Items>
         </Picker>
-        <Button Text="Confirm" Clicked="OnConfirmClicked" />
+
+        <Button Text="Confirm" 
+                Clicked="OnConfirmClicked" />
     </VerticalStackLayout>
 </toolkit:Popup>

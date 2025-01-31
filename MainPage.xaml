@@ -39,7 +39,16 @@
                                    FontAttributes="Bold"
                                    TextColor="White" />
 
+                            <Label Text="{Binding Frequency, StringFormat='Frequency (days): {0}'}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="White" />
+
                             <Label Text="{Binding LastChangeDate, StringFormat='Last Change: {0:dd MMM yy}'}"
+                                   FontSize="16"
+                                   TextColor="White" />
+
+                            <Label Text="{Binding LastAction, StringFormat='Last Action: {0}'}"
                                    FontSize="16"
                                    TextColor="White" />
 
@@ -53,12 +62,11 @@
                                    TextColor="White" />
 
                             <Button Text="Edit"
+                                    Clicked="OnEditBedClicked"
                                     FontSize="16"
                                     BackgroundColor="DarkBlue"
                                     TextColor="White"
-                                    Padding="10"
-                                    Command="{Binding UpdateBedCommand}"
-                                    CommandParameter="{Binding}" />
+                                    Padding="10" />
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
