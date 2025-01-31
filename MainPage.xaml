@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BedChangeReminder"
+             x:Class="BedChangeReminder.MainPage"
+             x:DataType="vm:MainViewModel">
+
+    <Grid x:Name="MainGrid" RowDefinitions="Auto, *">
+        <!-- Header -->
+        <VerticalStackLayout Padding="0" Spacing="10" Grid.Row="0">
+            <Label Text="Bed Change Tracker" 
+               FontSize="24" 
+               HorizontalOptions="Center" 
+               FontAttributes="Bold" />
+
+            <Button Text="Add Bed"
+                Clicked="OnAddBedClicked"
+                BackgroundColor="Purple"
+                TextColor="White"
+                FontSize="18"
+                HeightRequest="50" />
+        </VerticalStackLayout>
+
+        <!-- Bed List -->
+        <CollectionView x:Name="BedCollectionView"
+                        ItemsSource="{Binding Beds}"
+                        Grid.Row="1"
+                        Margin="10"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:Bed">
+                    <Border Stroke="White" StrokeThickness="2" Background="Orange" Padding="10" Margin="10">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding Name}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="White" />
+
+                            <Label Text="{Binding LastChangeDate, StringFormat='Last Change: {0:dd MMM yy}'}"
+                                   FontSize="16"
+                                   TextColor="White" />
+
+                            <Label Text="{Binding NextChangeDate, StringFormat='Next Change: {0:dd MMM yy}'}"
+                                   FontSize="16"
+                                   FontAttributes="Italic"
+                                   TextColor="White" /> 
+
+                            <Label Text="{Binding NextAction, StringFormat='Next Action: {0}'}"
+                                   FontSize="16"
+                                   TextColor="White" />
+
+                            <Button Text="Edit"
+                                    FontSize="16"
+                                    BackgroundColor="DarkBlue"
+                                    TextColor="White"
+                                    Padding="10"
+                                    Command="{Binding UpdateBedCommand}"
+                                    CommandParameter="{Binding}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
