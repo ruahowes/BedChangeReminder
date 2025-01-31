@@ -2,6 +2,7 @@
 using Microsoft.Maui.Controls;
 using BedChangeReminder.Views;
 using Microsoft.Maui.Controls.Compatibility;
+using Layout = Microsoft.Maui.Controls.Layout;
 //using Microsoft.UI.Xaml.Data;
 
 namespace BedChangeReminder
@@ -73,6 +74,7 @@ namespace BedChangeReminder
 
                 await this.ShowPopupAsync(popup);
             }
+            await Task.Delay(0);
         }
 
         protected override void OnAppearing()
@@ -80,7 +82,15 @@ namespace BedChangeReminder
             base.OnAppearing();
             if (MainGrid != null)
             {
-                MainGrid.InvalidateMeasure(); // 🔹 Forces re-measurement
+                Dispatcher.Dispatch(() =>
+                {
+                    var parent = MainGrid.Parent as Layout;
+                    if (parent != null)
+                    {
+                        parent.Remove(MainGrid);
+                        parent.Add(MainGrid);
+                    }
+                });
                 MainGrid.Handler?.UpdateValue(nameof(HeightRequest));       // 🔹 Forces re-layout
             }
             this.ForceLayout(); // ✅ Forces UI to refresh and apply bindings
