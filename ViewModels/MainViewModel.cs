@@ -23,7 +23,7 @@ namespace BedChangeReminder.ViewModels
         {
             get
             {
-                if (Beds.Count == 0) return "No beds tracked";
+                if (Beds.Count == 0) return "No beds tracked ";
 
                 var overdue = Beds.Count(b => b.IsOverdue);
                 var dueToday = Beds.Count(b => b.IsDueToday);

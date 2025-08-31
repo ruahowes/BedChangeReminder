@@ -5,110 +5,113 @@
                x:Class="BedChangeReminder.Views.Popups.AddBedPopup"
                CanBeDismissedByTappingOutsideOfPopup="True">
 
+    <Grid BackgroundColor="{StaticResource Black}" Opacity="0.7" Padding="20">
+        <Frame BackgroundColor="{StaticResource White}" 
+               CornerRadius="20" 
+               BorderColor="DarkSlateGray" 
+               Padding="20" 
+               HasShadow="True" 
+               HorizontalOptions="Center" 
+               VerticalOptions="Center"
+               MaximumWidthRequest="350"
+               Opacity="1.0">
 
-    <ScrollView>
-        <Grid BackgroundColor="Black" Opacity="0.4" Padding="20">
-            <Frame BackgroundColor="White" 
-                   CornerRadius="20" 
-                   BorderColor="DarkSlateGray" 
-                   Padding="20" 
-                   HasShadow="True" 
-                   HorizontalOptions="Center" 
-                   VerticalOptions="Center"
-                   MaximumWidthRequest="400">
-
+            <ScrollView>
                 <StackLayout Spacing="15">
                     <!-- Header -->
                     <Label Text="Add New Bed" 
-                           FontSize="20"
+                           FontSize="22"
                            FontAttributes="Bold"
                            VerticalOptions="Center" 
                            HorizontalOptions="Center" 
                            TextColor="DarkSlateGray" />
 
                     <!-- Bed Name -->
-                    <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                        <StackLayout>
-                            <Label Text="Bed Name:" FontAttributes="Bold" TextColor="Black" />
+                    <StackLayout Spacing="5">
+                        <Label Text="Bed Name:" FontAttributes="Bold" TextColor="Black" />
+                        <Frame BackgroundColor="White" BorderColor="LightGray" CornerRadius="5" Padding="5">
                             <Entry Text="{Binding NewBed.Name}" 
                                    Placeholder="Enter Bed Name" 
                                    TextColor="Black" 
-                                   BackgroundColor="White"
+                                   BackgroundColor="Transparent"
                                    FontSize="16" />
-                        </StackLayout>
-                    </Frame>
+                        </Frame>
+                    </StackLayout>
 
                     <!-- Frequency -->
-                    <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                        <StackLayout>
-                            <Label Text="Change Frequency (days):" FontAttributes="Bold" TextColor="Black" />
+                    <StackLayout Spacing="5">
+                        <Label Text="Change Frequency (days):" FontAttributes="Bold" TextColor="Black" />
+                        <Frame BackgroundColor="White" BorderColor="LightGray" CornerRadius="5" Padding="5">
                             <Entry Text="{Binding NewBed.Frequency}" 
                                    Placeholder="Enter frequency in days" 
                                    Keyboard="Numeric" 
                                    TextColor="Black" 
-                                   BackgroundColor="White"
+                                   BackgroundColor="Transparent"
                                    FontSize="16" />
-                        </StackLayout>
-                    </Frame>
+                        </Frame>
+                    </StackLayout>
 
                     <!-- Last Change Date -->
-                    <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                        <StackLayout>
-                            <Label Text="Last Change Date:" FontAttributes="Bold" TextColor="Black" />
+                    <StackLayout Spacing="5">
+                        <Label Text="Last Change Date:" FontAttributes="Bold" TextColor="Black" />
+                        <Frame BackgroundColor="White" BorderColor="LightGray" CornerRadius="5" Padding="5">
                             <DatePicker Date="{Binding NewBed.LastChangeDate}" 
                                        Format="dd/MM/yyyy" 
                                        TextColor="Black" 
-                                       BackgroundColor="White"
+                                       BackgroundColor="Transparent"
                                        FontSize="16" />
-                        </StackLayout>
-                    </Frame>
+                        </Frame>
+                    </StackLayout>
 
                     <!-- Last Action Selection -->
-                    <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                        <StackLayout>
-                            <Label Text="Last Action Performed:" FontAttributes="Bold" TextColor="Black" />
-                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="5">
-                                <Button Grid.Column="0"
-                                        Text="None" 
-                                        Command="{Binding SelectNoneCommand}" 
-                                        BackgroundColor="{Binding TempSelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='None'}" 
-                                        TextColor="White"
-                                        FontSize="14" />
-                                <Button Grid.Column="1"
-                                        Text="Flip" 
-                                        Command="{Binding SelectFlipCommand}" 
-                                        BackgroundColor="{Binding TempSelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='Flip'}" 
-                                        TextColor="White"
-                                        FontSize="14" />
-                                <Button Grid.Column="2"
-                                        Text="Rotate" 
-                                        Command="{Binding SelectRotateCommand}" 
-                                        BackgroundColor="{Binding TempSelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='Rotate'}" 
-                                        TextColor="White"
-                                        FontSize="14" />
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
+                    <StackLayout Spacing="5">
+                        <Label Text="Last Action Performed:" FontAttributes="Bold" TextColor="Black" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <Button Grid.Column="2"
+                                    Text="None" 
+                                    Command="{Binding SelectNoneCommand}" 
+                                    BackgroundColor="{Binding TempSelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='None'}" 
+                                    TextColor="White"
+                                    FontSize="12"
+                                    HeightRequest="40" />
+                            <Button Grid.Column="0"
+                                    Text="Flip" 
+                                    Command="{Binding SelectFlipCommand}" 
+                                    BackgroundColor="{Binding TempSelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='Flip'}" 
+                                    TextColor="White"
+                                    FontSize="12"
+                                    HeightRequest="40" />
+                            <Button Grid.Column="1"
+                                    Text="Rotate" 
+                                    Command="{Binding SelectRotateCommand}" 
+                                    BackgroundColor="{Binding TempSelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='Rotate'}" 
+                                    TextColor="White"
+                                    FontSize="12"
+                                    HeightRequest="40" />
+                        </Grid>
+                    </StackLayout>
 
                     <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,20,0,0">
                         <Button Grid.Column="0"
                                 Text="Add Bed" 
                                 Command="{Binding ConfirmCommand}" 
                                 BackgroundColor="Green" 
                                 TextColor="White"
                                 FontSize="16"
-                                HeightRequest="45" />
+                                HeightRequest="50"
+                                CornerRadius="10" />
                         <Button Grid.Column="1"
                                 Text="Cancel" 
                                 Command="{Binding CancelCommand}" 
                                 BackgroundColor="Red" 
                                 TextColor="White"
                                 FontSize="16"
-                                HeightRequest="45" />
+                                HeightRequest="50"
+                                CornerRadius="10" />
                     </Grid>
                 </StackLayout>
-            </Frame>
-        </Grid>
-    </ScrollView>
+            </ScrollView>
+        </Frame>
+    </Grid>
 </toolkit:Popup>

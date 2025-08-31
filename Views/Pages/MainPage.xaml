@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:m="clr-namespace:BedChangeReminder.Models"
              xmlns:vm="clr-namespace:BedChangeReminder.ViewModels"
+             xmlns:m="clr-namespace:BedChangeReminder.Models"
              x:Class="BedChangeReminder.Views.Pages.MainPage"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:MainViewModel"
+             Title="Bed Change Tracker">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -34,12 +35,6 @@
     <Grid RowDefinitions="Auto, *" Padding="10">
         <!-- Header -->
         <StackLayout Grid.Row="0" Spacing="10">
-            <Label Text="Bed Change Tracker" 
-                   FontSize="24" 
-                   HorizontalOptions="Center" 
-                   FontAttributes="Bold"
-                   TextColor="DarkBlue" />
-
             <Button Text="Add New Bed" 
                     Command="{Binding AddBedCommand}" 
                     BackgroundColor="Purple" 
@@ -48,12 +43,13 @@
                     CornerRadius="10"
                     HeightRequest="50" 
                     Margin="20,0" />
-
             <Label Text="{Binding BedsStatusSummary}"
                    FontSize="14"
                    HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
                    TextColor="DarkSlateGray"
-                   FontAttributes="Italic" />
+                   FontAttributes="Italic"
+                   Margin="10,5" />
         </StackLayout>
 
         <!-- Bed List -->
@@ -63,7 +59,29 @@
 
             <CollectionView ItemsSource="{Binding Beds}"
                             SelectionMode="None"
-                            EmptyView="No beds added yet. Tap 'Add New Bed' to get started!">
+                            EmptyView="No beds added yet. Tap 'Add New Bed' to get started!"
+                            Margin="5,10">
+
+                <CollectionView.EmptyViewTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="20" VerticalOptions="CenterAndExpand" Spacing="15">
+                            <Label Text="No beds tracked yet" 
+                                   FontSize="18" 
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="Gray"
+                                   Margin="20,10"
+                                   HeightRequest="30" />
+                            <Label Text="Tap 'Add New Bed' to get started!" 
+                                   FontSize="14" 
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="DarkGray"
+                                   Margin="20,0"
+                                   HeightRequest="25" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.EmptyViewTemplate>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="m:Bed">
