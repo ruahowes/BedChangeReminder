@@ -3,6 +3,7 @@ using CommunityToolkit.Maui;
 using BedChangeReminder.Services;
 using BedChangeReminder.ViewModels;
 using BedChangeReminder.Views.Pages;
+using Plugin.LocalNotification;
 
 namespace BedChangeReminder
 {
@@ -14,6 +15,7 @@ namespace BedChangeReminder
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseLocalNotification()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -26,11 +28,7 @@ namespace BedChangeReminder
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddSingleton<AppShell>();
 
-#if ANDROID
-            builder.Services.AddSingleton<INotificationService, AndroidNotificationService>();
-#else
-            builder.Services.AddSingleton<INotificationService, DefaultNotificationService>();
-#endif
+            builder.Services.AddSingleton<IBedNotificationService, BedNotificationService>();
 
 #if DEBUG
             builder.Logging.AddDebug();

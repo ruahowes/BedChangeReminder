@@ -50,6 +50,14 @@
                    TextColor="DarkSlateGray"
                    FontAttributes="Italic"
                    Margin="10,5" />
+            <Button Text="Test Notification" 
+                    Command="{Binding TestNotificationCommand}" 
+                    BackgroundColor="Orange" 
+                    TextColor="White" 
+                    FontSize="14" 
+                    CornerRadius="10"
+                    HeightRequest="40" 
+                    Margin="20,5" />
         </StackLayout>
 
         <!-- Bed List -->

@@ -11,7 +11,7 @@ namespace BedChangeReminder.ViewModels
     public partial class MainViewModel : ObservableObject
     {
         private readonly BedDatabase _bedDatabase;
-        private readonly INotificationService _notificationService;
+        private readonly IBedNotificationService _notificationService;
 
         [ObservableProperty]
         private ObservableCollection<Bed> beds = new();
@@ -34,19 +34,14 @@ namespace BedChangeReminder.ViewModels
                 if (dueToday > 0) parts.Add($"{dueToday} due today");
                 if (dueSoon > 0) parts.Add($"{dueSoon} due soon");
 
-                return parts.Count > 0 ? string.Join(", ", parts) : $"{Beds.Count} beds tracked, all up to date";
+                return parts.Count > 0 ? string.Join(", ", parts) + " " : $"{Beds.Count} beds tracked, all up to date ";
             }
         }
 
-        public MainViewModel(BedDatabase bedDatabase)
+        public MainViewModel(BedDatabase bedDatabase, IBedNotificationService notificationService)
         {
             _bedDatabase = bedDatabase;
-
-#if ANDROID
-            _notificationService = new AndroidNotificationService();
-#else
-            _notificationService = new DefaultNotificationService();
-#endif
+            _notificationService = notificationService;
 
             _ = InitializeAsync();
         }
@@ -172,6 +167,37 @@ namespace BedChangeReminder.ViewModels
                 await _notificationService.CancelNotification(selectedBed.Id);
                 Beds.Remove(selectedBed);
                 OnPropertyChanged(nameof(BedsStatusSummary));
+            }
+        }
+
+        [RelayCommand]
+        private async Task TestNotification()
+        {
+            try
+            {
+                // Request permissions first
+                var hasPermission = await _notificationService.RequestPermissions();
+                if (!hasPermission)
+                {
+                    await Shell.Current.DisplayAlert("Permission Required",
+                        "Please enable notifications in your device settings", "OK");
+                    return;
+                }
+
+                // Schedule a test notification for 10 seconds from now
+                await _notificationService.ScheduleNotification(
+                    999, // Test notification ID
+                    "Test Bed",
+                    DateTime.Now.AddSeconds(10) // This will trigger the "tomorrow at 9 AM" fallback
+                );
+
+                await Shell.Current.DisplayAlert("Test Scheduled",
+                    "Test notification scheduled! It should appear in about 10 seconds.", "OK");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error",
+                    $"Failed to schedule notification: {ex.Message}", "OK");
             }
         }
     }
