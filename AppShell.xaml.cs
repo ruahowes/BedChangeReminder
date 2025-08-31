@@ -1,21 +1,17 @@
-﻿namespace BedChangeReminder
+﻿using BedChangeReminder.Views.Pages;
+
+namespace BedChangeReminder
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        public AppShell(MainPage mainPage)
         {
             InitializeComponent();
-
-            CurrentItem = new ShellContent
+            Items.Add(new ShellContent
             {
-                Content = new MainPage(new MainViewModel())
-            };
+                Content = mainPage,
+                Title = "Home"
+            });
         }
-
-        //public AppShell(MainPage mainPage)
-        //{
-        //    InitializeComponent();
-        //    this.Items.Add(new ShellContent { Content = mainPage });
-        //}
     }
 }

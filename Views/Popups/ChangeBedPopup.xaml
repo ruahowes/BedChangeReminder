@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="BedChangeReminder.Views.Popups.ChangeBedPopup"
+               CanBeDismissedByTappingOutsideOfPopup="True">
+
+    <Grid BackgroundColor="Black" Opacity="0.4" Padding="20">
+        <Frame BackgroundColor="White" 
+               CornerRadius="20" 
+               BorderColor="DarkSlateGray" 
+               Padding="20" 
+               HasShadow="True" 
+               HorizontalOptions="Center" 
+               VerticalOptions="Center"
+               MaximumWidthRequest="400">
+
+            <StackLayout Spacing="20">
+                <!-- Header -->
+                <Label Text="{Binding BedName, StringFormat='Changed: {0}'}" 
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" 
+                       TextColor="DarkSlateGray" />
+
+                <!-- Current Status -->
+                <Frame BackgroundColor="LightBlue" CornerRadius="10" Padding="15">
+                    <StackLayout Spacing="5">
+                        <Label Text="Current Status:" FontAttributes="Bold" TextColor="DarkBlue" />
+                        <Label Text="{Binding CurrentActionText}" TextColor="DarkBlue" FontSize="16" />
+                        <Label Text="{Binding RecommendedActionText}" TextColor="DarkGreen" FontSize="16" FontAttributes="Italic" />
+                    </StackLayout>
+                </Frame>
+
+                <!-- Action Selection -->
+                <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="15">
+                    <StackLayout Spacing="10">
+                        <Label Text="What did you do today?" FontAttributes="Bold" TextColor="Black" FontSize="16" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="5">
+                            <Button Grid.Column="0"
+                                    Text="Just Changed" 
+                                    Command="{Binding SelectNoneCommand}" 
+                                    BackgroundColor="{Binding SelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='None'}" 
+                                    TextColor="White"
+                                    FontSize="12" />
+                            <Button Grid.Column="1"
+                                    Text="Flip" 
+                                    Command="{Binding SelectFlipCommand}" 
+                                    BackgroundColor="{Binding SelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='Flip'}" 
+                                    TextColor="White"
+                                    FontSize="12" />
+                            <Button Grid.Column="2"
+                                    Text="Rotate" 
+                                    Command="{Binding SelectRotateCommand}" 
+                                    BackgroundColor="{Binding SelectedAction, Converter={StaticResource BedActionConverter}, ConverterParameter='Rotate'}" 
+                                    TextColor="White"
+                                    FontSize="12" />
+                        </Grid>
+                        <Label Text="'Just Changed' keeps the previous mattress action for next time" 
+                               FontSize="12" 
+                               TextColor="DarkGray" 
+                               FontAttributes="Italic"
+                               HorizontalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+
+                <!-- Date Override -->
+                <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
+                    <StackLayout>
+                        <Label Text="Change Date:" FontAttributes="Bold" TextColor="Black" />
+                        <DatePicker Date="{Binding ChangeDate}" 
+                                   Format="dd/MM/yyyy" 
+                                   TextColor="Black" 
+                                   BackgroundColor="White"
+                                   FontSize="16" />
+                    </StackLayout>
+                </Frame>
+
+                <!-- Action Buttons -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                    <Button Grid.Column="0"
+                            Text="Confirm" 
+                            Command="{Binding ConfirmCommand}" 
+                            BackgroundColor="Green" 
+                            TextColor="White"
+                            FontSize="16"
+                            HeightRequest="45" />
+                    <Button Grid.Column="1"
+                            Text="Cancel" 
+                            Command="{Binding CancelCommand}" 
+                            BackgroundColor="Red" 
+                            TextColor="White"
+                            FontSize="16"
+                            HeightRequest="45" />
+                </Grid>
+            </StackLayout>
+        </Frame>
+    </Grid>
+</toolkit:Popup>

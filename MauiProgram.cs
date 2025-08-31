@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.IO;
 using CommunityToolkit.Maui;
+using BedChangeReminder.Services;
+using BedChangeReminder.ViewModels;
+using BedChangeReminder.Views.Pages;
 
 namespace BedChangeReminder
 {
@@ -18,15 +20,17 @@ namespace BedChangeReminder
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // 🔹 Register Database and ViewModel
-            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "beds.db3");
-
-            // ✅ Register services correctly
-            builder.Services.AddSingleton<BedDatabase>(); // Ensure Database is registered
-            builder.Services.AddSingleton<MainViewModel>(); // Ensure ViewModel is registered
-            builder.Services.AddSingleton<MainPage>();
+            // Register services for dependency injection
+            builder.Services.AddSingleton<BedDatabase>();
+            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddTransient<MainPage>();
             builder.Services.AddSingleton<AppShell>();
-            builder.Services.AddSingleton<App>();
+
+#if ANDROID
+            builder.Services.AddSingleton<INotificationService, AndroidNotificationService>();
+#else
+            builder.Services.AddSingleton<INotificationService, DefaultNotificationService>();
+#endif
 
 #if DEBUG
             builder.Logging.AddDebug();
