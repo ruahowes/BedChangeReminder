@@ -1,57 +1,102 @@
-﻿using Plugin.LocalNotification;
+﻿using System;
+using System.Threading.Tasks;
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.AndroidOption;
 
 namespace BedChangeReminder.Services
 {
-    // Create a simple interface just for our app's needs
     public interface IBedNotificationService
     {
         Task<bool> RequestPermissions();
         Task ScheduleNotification(int bedId, string bedName, DateTime dueDate);
         Task CancelNotification(int bedId);
         Task CancelAllNotifications();
+        Task ShowImmediateTestAsync(); // helper for instant test
     }
 
     public class BedNotificationService : IBedNotificationService
     {
+        private const string ChannelId = "bed_reminders";
+        private static bool _channelCreated;
+
+        public BedNotificationService() { }
+
         public async Task<bool> RequestPermissions()
-        {
-            return await LocalNotificationCenter.Current.RequestNotificationPermission();
-        }
+            => await LocalNotificationCenter.Current.RequestNotificationPermission();
+
+//        private async Task EnsureChannelAsync()
+//        {
+//#if ANDROID
+//            if (_channelCreated) return;
+
+//            await LocalNotificationCenter.Current.CreateChannelAsync(new NotificationChannelRequest
+//            {
+//                Id = ChannelId,
+//                Name = "Bed Change Reminders",
+//                Description = "Due reminders and test notifications",
+//                Importance = AndroidImportance.High
+//            });
+
+//            _channelCreated = true;
+//#endif
+//        }
 
         public async Task ScheduleNotification(int bedId, string bedName, DateTime dueDate)
         {
             // Cancel any existing notification for this bed
             await CancelNotification(bedId);
 
-            // Schedule notification for day before due date at 9 AM
+            // Your original scheduling logic (9am the day before; else 9am day-of; else tomorrow 9am)
             var notificationTime = dueDate.Date.AddDays(-1).AddHours(9);
-
-            // If notification time has already passed, schedule for due date instead
             if (notificationTime <= DateTime.Now)
             {
                 notificationTime = dueDate.Date.AddHours(9);
-
-                // If that's also passed, schedule for tomorrow at 9 AM
                 if (notificationTime <= DateTime.Now)
-                {
                     notificationTime = DateTime.Now.Date.AddDays(1).AddHours(9);
-                }
             }
+
+            //await EnsureChannelAsync();
 
             var request = new NotificationRequest
             {
-                NotificationId = bedId, // Use bed ID as notification ID
+                NotificationId = bedId,
                 Title = "🛏️ Bed Change Reminder",
                 Subtitle = $"{bedName} is due for changing",
                 Description = $"Time to change the sheets for {bedName}!",
                 BadgeNumber = 1,
-                Schedule = new NotificationRequestSchedule
+                Schedule = new NotificationRequestSchedule { NotifyTime = notificationTime },
+#if ANDROID
+                Android = new AndroidOptions
                 {
-                    NotifyTime = notificationTime
+                    ChannelId = ChannelId,
+                    Priority = AndroidPriority.High
                 }
+#endif
             };
 
             await LocalNotificationCenter.Current.Show(request);
+        }
+
+        public async Task ShowImmediateTestAsync()
+        {
+            await RequestPermissions();
+            //await EnsureChannelAsync();
+
+            var req = new NotificationRequest
+            {
+                NotificationId = 9999,
+                Title = "Bed Change Reminder (Test)",
+                Description = "If you see this, notifications work.",
+#if ANDROID
+                Android = new AndroidOptions
+                {
+                    ChannelId = ChannelId,
+                    Priority = AndroidPriority.High
+                }
+#endif
+            };
+
+            await LocalNotificationCenter.Current.Show(req);
         }
 
         public async Task CancelNotification(int bedId)

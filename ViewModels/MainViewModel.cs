@@ -175,29 +175,15 @@ namespace BedChangeReminder.ViewModels
         {
             try
             {
-                // Request permissions first
-                var hasPermission = await _notificationService.RequestPermissions();
-                if (!hasPermission)
-                {
-                    await Shell.Current.DisplayAlert("Permission Required",
-                        "Please enable notifications in your device settings", "OK");
-                    return;
-                }
+                await _notificationService.ShowImmediateTestAsync();
 
-                // Schedule a test notification for 10 seconds from now
-                await _notificationService.ScheduleNotification(
-                    999, // Test notification ID
-                    "Test Bed",
-                    DateTime.Now.AddSeconds(10) // This will trigger the "tomorrow at 9 AM" fallback
-                );
-
-                await Shell.Current.DisplayAlert("Test Scheduled",
-                    "Test notification scheduled! It should appear in about 10 seconds.", "OK");
+                await Shell.Current.DisplayAlert("Test Sent",
+                    "A test notification was just sent immediately. Check your notification shade.", "OK");
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error",
-                    $"Failed to schedule notification: {ex.Message}", "OK");
+                    $"Failed to show test notification: {ex.Message}", "OK");
             }
         }
     }
