@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-
-namespace BedChangeReminder
+﻿namespace BedChangeReminder
 {
     public partial class App : Application
     {
@@ -9,10 +7,5 @@ namespace BedChangeReminder
             InitializeComponent();
             MainPage = appShell;
         }
-
-        //protected override Window CreateWindow(IActivationState? activationState)
-        //{
-        //    return new Window(new AppShell()); // Use AppShell as the main UI
-        //}
     }
 }

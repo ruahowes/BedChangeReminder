@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BedChangeReminder.ViewModels"
+             xmlns:m="clr-namespace:BedChangeReminder.Models"
+             x:Class="BedChangeReminder.Views.Pages.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="Bed Change Tracker">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="OverdueCard" TargetType="Border">
+                <Setter Property="Background" Value="LightCoral" />
+                <Setter Property="Stroke" Value="Red" />
+                <Setter Property="StrokeThickness" Value="2" />
+            </Style>
+            <Style x:Key="DueTodayCard" TargetType="Border">
+                <Setter Property="Background" Value="Orange" />
+                <Setter Property="Stroke" Value="DarkOrange" />
+                <Setter Property="StrokeThickness" Value="2" />
+            </Style>
+            <Style x:Key="DueSoonCard" TargetType="Border">
+                <Setter Property="Background" Value="Gold" />
+                <Setter Property="Stroke" Value="DarkGoldenrod" />
+                <Setter Property="StrokeThickness" Value="2" />
+            </Style>
+            <Style x:Key="NormalCard" TargetType="Border">
+                <Setter Property="Background" Value="LightGreen" />
+                <Setter Property="Stroke" Value="Green" />
+                <Setter Property="StrokeThickness" Value="2" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *" Padding="10">
+        <!-- Header -->
+        <StackLayout Grid.Row="0" Spacing="10">
+            <Button Text="Add New Bed" 
+                    Command="{Binding AddBedCommand}" 
+                    BackgroundColor="Purple" 
+                    TextColor="White" 
+                    FontSize="16" 
+                    CornerRadius="10"
+                    HeightRequest="50" 
+                    Margin="20,0" />
+            <Label Text="{Binding BedsStatusSummary}"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="DarkSlateGray"
+                   FontAttributes="Italic"
+                   Margin="10,5" />
+            <Button Text="Test Notification" 
+                    Command="{Binding TestNotificationCommand}" 
+                    BackgroundColor="Orange" 
+                    TextColor="White" 
+                    FontSize="14" 
+                    CornerRadius="10"
+                    HeightRequest="40" 
+                    Margin="20,5" />
+        </StackLayout>
+
+        <!-- Bed List -->
+        <RefreshView Grid.Row="1" 
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+
+            <CollectionView ItemsSource="{Binding Beds}"
+                            SelectionMode="None"
+                            EmptyView="No beds added yet. Tap 'Add New Bed' to get started!"
+                            Margin="5,10">
+
+                <CollectionView.EmptyViewTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="20" VerticalOptions="CenterAndExpand" Spacing="15">
+                            <Label Text="No beds tracked yet" 
+                                   FontSize="18" 
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="Gray"
+                                   Margin="20,10"
+                                   HeightRequest="30" />
+                            <Label Text="Tap 'Add New Bed' to get started!" 
+                                   FontSize="14" 
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="DarkGray"
+                                   Margin="20,0"
+                                   HeightRequest="25" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.EmptyViewTemplate>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:Bed">
+                        <Grid Padding="5">
+                            <Border Padding="15" 
+                                    Margin="5"
+                                    x:Name="BedCard">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="15"/>
+                                </Border.StrokeShape>
+
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsOverdue}" Value="True">
+                                                <Setter Property="Background" Value="LightCoral" />
+                                                <Setter Property="Stroke" Value="Red" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsDueToday}" Value="True">
+                                                <Setter Property="Background" Value="Orange" />
+                                                <Setter Property="Stroke" Value="DarkOrange" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsDueSoon}" Value="True">
+                                                <Setter Property="Background" Value="Gold" />
+                                                <Setter Property="Stroke" Value="DarkGoldenrod" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Setter Property="Background" Value="LightGreen" />
+                                        <Setter Property="Stroke" Value="Green" />
+                                        <Setter Property="StrokeThickness" Value="2" />
+                                    </Style>
+                                </Border.Style>
+
+                                <StackLayout Spacing="8">
+                                    <!-- Bed Name -->
+                                    <Label Text="{Binding Name}"
+                                           FontSize="22"
+                                           FontAttributes="Bold"
+                                           TextColor="DarkSlateGray"
+                                           HorizontalOptions="Center" />
+
+                                    <!-- Status -->
+                                    <Label Text="{Binding DaysUntilNextText}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="DarkRed"
+                                           HorizontalOptions="Center" />
+
+                                    <!-- Details Grid -->
+                                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="5">
+
+                                        <Label Grid.Row="0" Grid.Column="0" Text="Frequency:" FontAttributes="Bold" TextColor="Black" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Frequency, StringFormat='{0} days'}" TextColor="Black" />
+
+                                        <Label Grid.Row="1" Grid.Column="0" Text="Last Changed:" FontAttributes="Bold" TextColor="Black" />
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding LastChangeDate, StringFormat='{0:dd MMM yyyy}'}" TextColor="Black" />
+
+                                        <Label Grid.Row="2" Grid.Column="0" Text="Last Action:" FontAttributes="Bold" TextColor="Black" />
+                                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding LastActionText}" TextColor="Black" />
+
+                                    </Grid>
+
+                                    <Label Text="{Binding NextActionText, StringFormat='Next: {0}'}" 
+                                           FontSize="14" 
+                                           TextColor="DarkBlue"
+                                           FontAttributes="Italic"
+                                           HorizontalOptions="Center" />
+
+                                    <!-- Action Buttons -->
+                                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                                        <Button Grid.Column="0" 
+                                                Text="Change Bed" 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ChangeBedCommand}" 
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="DarkGreen"
+                                                TextColor="White"
+                                                FontSize="12" />
+
+                                        <Button Grid.Column="1" 
+                                                Text="Edit" 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditBedCommand}" 
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="DarkBlue"
+                                                TextColor="White"
+                                                FontSize="12" />
+
+                                        <Button Grid.Column="2" 
+                                                Text="Delete" 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteBedCommand}" 
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="DarkRed"
+                                                TextColor="White"
+                                                FontSize="12" />
+                                    </Grid>
+                                </StackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>
