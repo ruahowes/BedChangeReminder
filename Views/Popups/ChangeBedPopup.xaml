@@ -32,6 +32,8 @@
                             <Label Text="Current Status:" FontAttributes="Bold" TextColor="DarkBlue" />
                             <Label Text="{Binding CurrentActionText}" TextColor="DarkBlue" FontSize="14" />
                             <Label Text="{Binding RecommendedActionText}" TextColor="DarkGreen" FontSize="14" FontAttributes="Italic" />
+                            <Label Text="{Binding PillowLinerStatusText}" TextColor="DarkBlue" FontSize="13" Margin="0,5,0,0" />
+                            <Label Text="{Binding MattressProtectorStatusText}" TextColor="DarkBlue" FontSize="13" />
                         </StackLayout>
                     </Frame>
 
@@ -78,6 +80,35 @@
                                        BackgroundColor="Transparent"
                                        FontSize="16" />
                         </Frame>
+                    </StackLayout>
+
+                    <!-- Additional Items -->
+                    <StackLayout Spacing="8">
+                        <Label Text="Also changed on this date?" FontAttributes="Bold" TextColor="Black" />
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding ChangedMattressProtector}"
+                                      Color="Green"
+                                      VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="Mattress protector"
+                                   VerticalOptions="Center"
+                                   TextColor="Black"
+                                   FontSize="15" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding ChangedPillowLiner}"
+                                      Color="Green"
+                                      VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="Pillow liners"
+                                   VerticalOptions="Center"
+                                   TextColor="Black"
+                                   FontSize="15" />
+                        </Grid>
                     </StackLayout>
 
                     <!-- Action Buttons -->

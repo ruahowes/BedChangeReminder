@@ -89,6 +89,41 @@
                         </Grid>
                     </StackLayout>
 
+                    <!-- Additional Items -->
+                    <StackLayout Spacing="8">
+                        <Label Text="Also changed on this date?" FontAttributes="Bold" TextColor="Black" />
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding ChangedMattressProtector}"
+                                      Color="Green"
+                                      VerticalOptions="Center" />
+                            <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="Mattress protector"
+                                       TextColor="Black"
+                                       FontSize="15" />
+                                <Label Text="{Binding MattressProtectorStatusText}"
+                                       TextColor="DarkGray"
+                                       FontSize="12" />
+                            </StackLayout>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding ChangedPillowLiner}"
+                                      Color="Green"
+                                      VerticalOptions="Center" />
+                            <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="Pillow liners"
+                                       TextColor="Black"
+                                       FontSize="15" />
+                                <Label Text="{Binding PillowLinerStatusText}"
+                                       TextColor="DarkGray"
+                                       FontSize="12" />
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+
                     <!-- Action Buttons -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,20,0,0">
                         <Button Grid.Column="0"

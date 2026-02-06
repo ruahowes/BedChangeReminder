@@ -110,6 +110,8 @@ namespace BedChangeReminder.ViewModels
                         existingBed.Frequency = updatedBed.Frequency;
                         existingBed.LastChangeDate = updatedBed.LastChangeDate;
                         existingBed.LastAction = updatedBed.LastAction;
+                        existingBed.LastMattressProtectorChangeDate = updatedBed.LastMattressProtectorChangeDate;
+                        existingBed.LastPillowLinerChangeDate = updatedBed.LastPillowLinerChangeDate;
 
                         // Refresh notifications
                         await _notificationService.ScheduleNotification(existingBed.Id, existingBed.Name, existingBed.NextChangeDate);
@@ -130,15 +132,14 @@ namespace BedChangeReminder.ViewModels
             {
                 if (updatedBed != null)
                 {
-                    // Update the bed with new change date and action
-                    updatedBed.LastChangeDate = DateTime.Today;
-
                     await _bedDatabase.SaveBedAsync(updatedBed);
                     var existingBed = Beds.FirstOrDefault(b => b.Id == updatedBed.Id);
                     if (existingBed != null)
                     {
                         existingBed.LastChangeDate = updatedBed.LastChangeDate;
                         existingBed.LastAction = updatedBed.LastAction;
+                        existingBed.LastMattressProtectorChangeDate = updatedBed.LastMattressProtectorChangeDate;
+                        existingBed.LastPillowLinerChangeDate = updatedBed.LastPillowLinerChangeDate;
 
                         // Refresh notifications
                         await _notificationService.ScheduleNotification(existingBed.Id, existingBed.Name, existingBed.NextChangeDate);
