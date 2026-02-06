@@ -15,7 +15,7 @@ A .NET MAUI Android app to track when your beds are due for a sheet change, and 
 
 ## Screenshots
 
-![Main Screen](screenshots/main-screen.png)
+![Main Screen](Screenshots/main-screen.png)
 
 ## Tech Stack
 
