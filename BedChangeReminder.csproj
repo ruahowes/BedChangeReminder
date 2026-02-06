@@ -27,6 +27,8 @@
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 
 		<Platforms>AnyCPU;ARM64</Platforms>
+
+		<Configurations>Debug;Release;x86x64</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
