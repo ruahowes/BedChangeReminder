@@ -19,11 +19,23 @@ namespace BedChangeReminder.ViewModels
         [ObservableProperty]
         private DateTime changeDate;
 
+        [ObservableProperty]
+        private bool changedMattressProtector;
+
+        [ObservableProperty]
+        private bool changedPillowLiner;
+
         public string CurrentActionText =>
             $"Last action: {_originalBed.LastActionText} on {_originalBed.LastChangeDate:dd MMM yyyy}";
 
         public string RecommendedActionText =>
             $"Recommended next action: {_originalBed.NextActionText}";
+
+        public string PillowLinerStatusText =>
+            $"Pillow liners: {_originalBed.PillowLinerSummaryText}";
+
+        public string MattressProtectorStatusText =>
+            $"Mattress protector: {_originalBed.MattressProtectorSummaryText}";
 
         public ChangeBedPopupViewModel(Bed bed, Action<Bed> onConfirm, Action onCancel)
         {
@@ -33,6 +45,8 @@ namespace BedChangeReminder.ViewModels
 
             BedName = bed.Name;
             ChangeDate = DateTime.Today;
+            ChangedMattressProtector = false;
+            ChangedPillowLiner = false;
 
             // Pre-select the recommended action
             SelectedAction = bed.LastAction switch
@@ -63,7 +77,9 @@ namespace BedChangeReminder.ViewModels
                 Name = _originalBed.Name,
                 Frequency = _originalBed.Frequency,
                 LastChangeDate = ChangeDate,
-                LastAction = SelectedAction == BedAction.None ? _originalBed.LastAction : SelectedAction
+                LastAction = SelectedAction == BedAction.None ? _originalBed.LastAction : SelectedAction,
+                LastMattressProtectorChangeDate = ChangedMattressProtector ? ChangeDate : _originalBed.LastMattressProtectorChangeDate,
+                LastPillowLinerChangeDate = ChangedPillowLiner ? ChangeDate : _originalBed.LastPillowLinerChangeDate
             };
 
             _onConfirm?.Invoke(updatedBed);
@@ -77,4 +93,3 @@ namespace BedChangeReminder.ViewModels
         }
     }
 }
-

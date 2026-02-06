@@ -12,6 +12,15 @@ namespace BedChangeReminder.ViewModels
         [ObservableProperty]
         private BedAction tempSelectedAction;
 
+        [ObservableProperty]
+        private bool changedMattressProtector;
+
+        [ObservableProperty]
+        private bool changedPillowLiner;
+
+        public string MattressProtectorStatusText { get; }
+        public string PillowLinerStatusText { get; }
+
         private readonly Action<Bed> _onConfirm;
         private readonly Action _onCancel;
 
@@ -23,10 +32,16 @@ namespace BedChangeReminder.ViewModels
                 Name = bed.Name,
                 Frequency = bed.Frequency,
                 LastChangeDate = bed.LastChangeDate,
-                LastAction = bed.LastAction
+                LastAction = bed.LastAction,
+                LastMattressProtectorChangeDate = bed.LastMattressProtectorChangeDate,
+                LastPillowLinerChangeDate = bed.LastPillowLinerChangeDate
             };
 
             TempSelectedAction = bed.LastAction;
+            ChangedMattressProtector = false;
+            ChangedPillowLiner = false;
+            MattressProtectorStatusText = $"Currently: {bed.MattressProtectorSummaryText}";
+            PillowLinerStatusText = $"Currently: {bed.PillowLinerSummaryText}";
             _onConfirm = onConfirm;
             _onCancel = onCancel;
         }
@@ -50,6 +65,13 @@ namespace BedChangeReminder.ViewModels
             }
 
             EditableBed.LastAction = TempSelectedAction;
+
+            if (ChangedMattressProtector)
+                EditableBed.LastMattressProtectorChangeDate = EditableBed.LastChangeDate;
+
+            if (ChangedPillowLiner)
+                EditableBed.LastPillowLinerChangeDate = EditableBed.LastChangeDate;
+
             _onConfirm?.Invoke(EditableBed);
             _onCancel?.Invoke(); // Close popup
         }
@@ -58,4 +80,3 @@ namespace BedChangeReminder.ViewModels
         private void Cancel() => _onCancel?.Invoke();
     }
 }
-

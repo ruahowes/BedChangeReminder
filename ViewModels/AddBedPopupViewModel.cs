@@ -13,6 +13,12 @@ namespace BedChangeReminder.ViewModels
         [ObservableProperty]
         private BedAction tempSelectedAction;
 
+        [ObservableProperty]
+        private bool changedMattressProtector;
+
+        [ObservableProperty]
+        private bool changedPillowLiner;
+
         private readonly Action<Bed> _onConfirm;
         private readonly Action _onCancel;
 
@@ -27,6 +33,8 @@ namespace BedChangeReminder.ViewModels
             };
 
             TempSelectedAction = NewBed.LastAction;
+            ChangedMattressProtector = false;
+            ChangedPillowLiner = false;
             _onConfirm = onConfirm;
             _onCancel = onCancel;
         }
@@ -57,6 +65,8 @@ namespace BedChangeReminder.ViewModels
             }
 
             NewBed.LastAction = TempSelectedAction;
+            NewBed.LastMattressProtectorChangeDate = ChangedMattressProtector ? NewBed.LastChangeDate : null;
+            NewBed.LastPillowLinerChangeDate = ChangedPillowLiner ? NewBed.LastChangeDate : null;
             _onConfirm?.Invoke(NewBed);
             _onCancel?.Invoke(); // Close popup
         }

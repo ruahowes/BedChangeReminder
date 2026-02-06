@@ -19,13 +19,41 @@ namespace BedChangeReminder.Models
         private string name = "NewBed";
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(NextChangeDate))]
+        [NotifyPropertyChangedFor(nameof(DaysUntilNext))]
+        [NotifyPropertyChangedFor(nameof(DaysUntilNextText))]
+        [NotifyPropertyChangedFor(nameof(IsOverdue))]
+        [NotifyPropertyChangedFor(nameof(IsDueToday))]
+        [NotifyPropertyChangedFor(nameof(IsDueSoon))]
         private int frequency = 14; // Days
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(NextChangeDate))]
+        [NotifyPropertyChangedFor(nameof(DaysUntilNext))]
+        [NotifyPropertyChangedFor(nameof(DaysUntilNextText))]
+        [NotifyPropertyChangedFor(nameof(IsOverdue))]
+        [NotifyPropertyChangedFor(nameof(IsDueToday))]
+        [NotifyPropertyChangedFor(nameof(IsDueSoon))]
         private DateTime lastChangeDate = DateTime.Today;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(LastActionText))]
+        [NotifyPropertyChangedFor(nameof(NextActionText))]
         private BedAction lastAction = BedAction.Flip;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(WeeksSinceMattressProtectorChange))]
+        [NotifyPropertyChangedFor(nameof(MattressProtectorStatusText))]
+        [NotifyPropertyChangedFor(nameof(MattressProtectorSummaryText))]
+        private DateTime? lastMattressProtectorChangeDate;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(WeeksSincePillowLinerChange))]
+        [NotifyPropertyChangedFor(nameof(PillowLinerStatusText))]
+        [NotifyPropertyChangedFor(nameof(PillowLinerSummaryText))]
+        private DateTime? lastPillowLinerChangeDate;
+
+        // --- Computed properties (read-only, not persisted by SQLite) ---
 
         public DateTime NextChangeDate => LastChangeDate.AddDays(Frequency);
 
@@ -65,6 +93,53 @@ namespace BedChangeReminder.Models
         public bool IsOverdue => DaysUntilNext < 0;
         public bool IsDueToday => DaysUntilNext == 0;
         public bool IsDueSoon => DaysUntilNext <= 3 && DaysUntilNext > 0;
+
+        public int WeeksSinceMattressProtectorChange =>
+            LastMattressProtectorChangeDate == null
+                ? -1
+                : (DateTime.Today - LastMattressProtectorChangeDate.Value).Days / 7;
+
+        public int WeeksSincePillowLinerChange =>
+            LastPillowLinerChangeDate == null
+                ? -1
+                : (DateTime.Today - LastPillowLinerChangeDate.Value).Days / 7;
+
+        public string MattressProtectorStatusText
+        {
+            get
+            {
+                if (LastMattressProtectorChangeDate == null)
+                    return "Mattress protector: Never changed";
+
+                var weeks = WeeksSinceMattressProtectorChange;
+                return $"Mattress protector: {LastMattressProtectorChangeDate.Value:dd MMM yyyy} ({weeks} week{(weeks != 1 ? "s" : "")} ago)";
+            }
+        }
+
+        public string PillowLinerStatusText
+        {
+            get
+            {
+                if (LastPillowLinerChangeDate == null)
+                    return "Pillow liners: Never changed";
+
+                var weeks = WeeksSincePillowLinerChange;
+                return $"Pillow liners: {LastPillowLinerChangeDate.Value:dd MMM yyyy} ({weeks} week{(weeks != 1 ? "s" : "")} ago)";
+            }
+        }
+
+        // Short summary (for main page cards)
+        public string MattressProtectorSummaryText =>
+            FormatWeeksSummary(WeeksSinceMattressProtectorChange);
+
+        public string PillowLinerSummaryText =>
+            FormatWeeksSummary(WeeksSincePillowLinerChange);
+
+        private static string FormatWeeksSummary(int weeks) => weeks switch
+        {
+            -1 => "Never",
+            _ => $"{weeks} weeks ago"
+        };
 
         // For backwards compatibility with existing database
         [Obsolete("Use LastAction instead")]
